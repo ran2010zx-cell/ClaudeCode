@@ -48,9 +48,9 @@ def main():
 
     parser.add_argument(
         '--mode',
-        choices=['run', 'once', 'test', 'stats'],
+        choices=['run', 'once', 'test', 'stats', 'demo'],
         default='run',
-        help='Run mode: run (continuous), once (single crawl), test (test report), stats (show statistics)'
+        help='Run mode: run (continuous), once (single crawl), test (test report), stats (show statistics), demo (run with demo data)'
     )
 
     parser.add_argument(
@@ -87,6 +87,10 @@ def main():
     elif args.mode == 'test':
         # Test report generation
         test_report(reporter)
+
+    elif args.mode == 'demo':
+        # Run with demo data
+        run_demo(db, reporter)
 
     elif args.mode == 'once':
         # Run single crawl
@@ -131,6 +135,93 @@ def test_report(reporter: Reporter):
     """
     logger.info("Generating test report...")
     reporter.generate_and_print_report()
+
+
+def run_demo(db: Database, reporter: Reporter):
+    """
+    Run demo mode with generated data
+
+    Args:
+        db: Database instance
+        reporter: Reporter instance
+    """
+    from .demo_data import DemoDataGenerator
+
+    logger.info("=" * 60)
+    logger.info("DEMO MODE - Generating sample data")
+    logger.info("=" * 60)
+
+    generator = DemoDataGenerator()
+
+    # Generate demo posts
+    logger.info("Generating demo posts...")
+    posts = generator.generate_all_posts(count_per_platform=8)
+
+    logger.info(f"Generated {len(posts)} demo posts")
+
+    # Save to database
+    saved_count = 0
+    for post in posts:
+        result = db.add_news_item(post)
+        if result:
+            saved_count += 1
+
+    logger.info(f"Saved {saved_count} new posts to database")
+
+    # Show statistics
+    logger.info("\n")
+    show_statistics(db)
+
+    # Generate and display report
+    logger.info("Generating demo report...")
+    logger.info("=" * 60)
+
+    items = db.get_unreported_items()
+    if items:
+        logger.info(f"Found {len(items)} unreported items")
+        print("\n" + "=" * 70)
+        print("DEMO REPORT PREVIEW")
+        print("=" * 70)
+
+        # Group by platform
+        by_platform = {}
+        for item in items:
+            if item.platform not in by_platform:
+                by_platform[item.platform] = []
+            by_platform[item.platform].append(item)
+
+        for platform, platform_items in by_platform.items():
+            print(f"\n【{platform.upper()}】 - {len(platform_items)} 条新舆情")
+            print("-" * 70)
+
+            for i, item in enumerate(platform_items[:3], 1):  # Show first 3
+                print(f"\n{i}. {item.title or '(无标题)'}")
+                print(f"   作者: {item.author}")
+                print(f"   时间: {item.published_at.strftime('%Y-%m-%d %H:%M')}")
+                print(f"   内容: {item.content[:150]}...")
+                print(f"   互动: 👍{item.likes} 💬{item.comments} 🔄{item.shares} 👀{item.views}")
+
+            if len(platform_items) > 3:
+                print(f"\n   ... 还有 {len(platform_items) - 3} 条")
+
+        print("\n" + "=" * 70)
+        print("提示: 完整报告可通过邮件发送 (需配置EMAIL_ENABLED=true)")
+        print("=" * 70 + "\n")
+
+        # Ask if user wants to send email report
+        if settings.email_enabled:
+            logger.info("Email is enabled. Generating full report...")
+            reporter.send_report()
+            logger.info("Demo report sent!")
+        else:
+            logger.info("Email not enabled. To enable, set EMAIL_ENABLED=true in .env")
+
+    else:
+        logger.info("No unreported items found")
+
+    logger.info("\n" + "=" * 60)
+    logger.info("Demo completed! Database saved at: data/xiaomi_news.db")
+    logger.info("=" * 60)
 
 
 if __name__ == '__main__':
