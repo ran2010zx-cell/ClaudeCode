@@ -1,0 +1,15 @@
+# 期权交易系统依赖
+
+# 富途API
+futu-api>=6.0.0
+
+# 数据处理
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# 环境变量
+python-dotenv>=1.0.0
+
+# 日志
+colorlog>=6.7.0
