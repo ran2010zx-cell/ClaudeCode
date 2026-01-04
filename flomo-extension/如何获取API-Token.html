@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>如何获取 Flomo API Token</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: #f5f7fa;
+      padding: 20px;
+      line-height: 1.8;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      font-size: 32px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 40px;
+      font-size: 16px;
+    }
+    .step {
+      margin-bottom: 40px;
+      padding: 30px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 5px solid #3498db;
+    }
+    .step-number {
+      display: inline-block;
+      background: #3498db;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    .step-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .step-content {
+      font-size: 16px;
+      color: #555;
+      margin-left: 55px;
+    }
+    .example-box {
+      background: white;
+      border: 2px dashed #3498db;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+    }
+    .example-label {
+      color: #3498db;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .example-url {
+      font-size: 16px;
+      color: #2c3e50;
+      word-break: break-all;
+    }
+    .token-highlight {
+      background: #fff3cd;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: #856404;
+    }
+    .warning-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .warning-title {
+      font-weight: bold;
+      color: #856404;
+      margin-bottom: 8px;
+    }
+    .success-box {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .success-title {
+      font-weight: bold;
+      color: #155724;
+      margin-bottom: 8px;
+    }
+    .button-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 20px 0;
+      transition: transform 0.2s;
+    }
+    .button-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+    .screenshot-placeholder {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 18px;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #e74c3c;
+    }
+    .arrow {
+      font-size: 24px;
+      color: #3498db;
+      margin: 0 10px;
+    }
+    ol {
+      margin-left: 20px;
+    }
+    ol li {
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔑 如何获取 Flomo API Token</h1>
+    <p class="subtitle">5 分钟快速教程</p>
+
+    <!-- 步骤 1 -->
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">1</span>
+        打开 Flomo 网页版
+      </div>
+      <div class="step-content">
+        <p>点击下面的按钮访问 Flomo：</p>
+        <a href="https://flomoapp.com/mine" target="_blank" class="button-link">
+          🚀 打开 Flomo 网页版
+        </a>
+        <p style="margin-top: 15px;">或者复制链接到浏览器：<code>https://flomoapp.com/mine</code></p>
+      </div>
+    </div>
+
+    <!-- 步骤 2 -->
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">2</span>
+        进入 API 设置页面
+      </div>
+      <div class="step-content">
+        <p>登录后，按照以下路径操作：</p>
+        <ol>
+          <li>点击右上角的 <strong>头像</strong>（或者你的用户名）</li>
+          <li>在下拉菜单中选择 <strong>「设置」</strong></li>
+          <li>在设置页面左侧菜单找到 <strong>「API」</strong> 选项</li>
+          <li>点击进入 API 设置页面</li>
+        </ol>
+
+        <div class="screenshot-placeholder">
+          📍 位置：右上角头像 → 设置 → API
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤 3 -->
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">3</span>
+        找到 Webhook 地址
+      </div>
+      <div class="step-content">
+        <p>在 API 设置页面，你会看到一个叫做 <strong>"Webhook"</strong> 的区域。</p>
+
+        <div class="warning-box">
+          <div class="warning-title">💡 什么是 Webhook？</div>
+          Webhook 就是一个特殊的网址，flomo 用它来接收外部发送的内容。<br>
+          简单理解：这是 flomo 给你的一个"收件箱"地址。
+        </div>
+
+        <p>你会看到一个类似这样的网址：</p>
+
+        <div class="example-box">
+          <div class="example-label">📋 Webhook 地址示例：</div>
+          <div class="example-url">
+            https://flomoapp.com/iwh/<span class="token-highlight">MjAyNC0xMi0zMVQxNTozMDowMCswODowMC0xMjM0NTY</span>
+          </div>
+        </div>
+
+        <p style="margin-top: 20px;">或者可能是这样：</p>
+
+        <div class="example-box">
+          <div class="example-label">📋 另一种格式：</div>
+          <div class="example-url">
+            https://flomoapp.com/iwh/<span class="token-highlight">abc123xyz456def789</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤 4 -->
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">4</span>
+        复制 Token（重点！）
+      </div>
+      <div class="step-content">
+        <p><strong>⚠️ 注意：你只需要复制最后一段！</strong></p>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin-bottom: 15px;">完整的 Webhook 地址：</p>
+          <div style="font-family: monospace; font-size: 16px; color: #555;">
+            https://flomoapp.com/iwh/<span style="background: #fff3cd; padding: 2px 6px; border-radius: 3px; font-weight: bold;">MjAyNC0xMi0zMVQxNTozMDowMCswODowMC0xMjM0NTY</span>
+          </div>
+
+          <p style="margin: 30px 0 15px 0; font-size: 20px; text-align: center;">
+            <span class="arrow">⬇️</span>
+          </p>
+
+          <p style="margin-bottom: 15px;">你只需要复制黄色高亮的这部分：</p>
+          <div style="font-family: monospace; font-size: 18px; background: #d4edda; padding: 15px; border-radius: 6px; font-weight: bold; color: #155724;">
+            MjAyNC0xMi0zMVQxNTozMDowMCswODowMC0xMjM0NTY
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <div class="warning-title">📌 简单记忆法：</div>
+          看到 <code>https://flomoapp.com/iwh/</code> 后面的那一长串字符？<br>
+          <strong>那就是你的 API Token！</strong><br><br>
+          通常是一串看起来没有规律的字母和数字组合。
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤 5 -->
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">5</span>
+        在扩展中粘贴 Token
+      </div>
+      <div class="step-content">
+        <ol>
+          <li>打开 Chrome 浏览器</li>
+          <li>点击浏览器工具栏的扩展图标 📝</li>
+          <li>点击 <strong>"打开设置"</strong> 按钮</li>
+          <li>在 "Flomo API Token" 输入框中 <strong>粘贴</strong> 刚才复制的 Token</li>
+          <li>点击 <strong>"测试连接"</strong> 按钮</li>
+        </ol>
+
+        <div class="success-box">
+          <div class="success-title">✅ 测试成功的标志：</div>
+          如果配置正确，你会看到提示"连接成功"，并且你的 flomo 里会收到一条测试消息：<br>
+          <em>"🧪 测试连接成功！这是来自 Flomo 智能助手的测试消息。"</em>
+        </div>
+
+        <p style="margin-top: 20px;">最后点击 <strong>"保存设置"</strong>，大功告成！🎉</p>
+      </div>
+    </div>
+
+    <!-- 常见问题 -->
+    <div class="step" style="border-left-color: #e74c3c;">
+      <div class="step-title">
+        <span class="step-number" style="background: #e74c3c;">❓</span>
+        常见问题
+      </div>
+      <div class="step-content">
+        <h3 style="color: #2c3e50; margin-bottom: 15px;">Q1: 我找不到 API 选项？</h3>
+        <p style="margin-bottom: 25px;">
+          <strong>答：</strong>确保你使用的是 <strong>flomo 网页版</strong>（https://flomoapp.com），而不是手机 APP。API 功能只在网页版提供。
+        </p>
+
+        <h3 style="color: #2c3e50; margin-bottom: 15px;">Q2: 复制了整个网址会怎样？</h3>
+        <p style="margin-bottom: 25px;">
+          <strong>答：</strong>不会有问题！扩展可以自动识别。但为了规范，建议只复制最后一段。
+        </p>
+
+        <h3 style="color: #2c3e50; margin-bottom: 15px;">Q3: Token 会过期吗？</h3>
+        <p style="margin-bottom: 25px;">
+          <strong>答：</strong>Token 一般不会过期，除非你在 flomo 设置中手动重新生成。
+        </p>
+
+        <h3 style="color: #2c3e50; margin-bottom: 15px;">Q4: Token 安全吗？</h3>
+        <p>
+          <strong>答：</strong>Token 只保存在你的浏览器本地，不会上传到任何服务器。但请不要把它分享给别人，否则别人可以往你的 flomo 发送内容。
+        </p>
+      </div>
+    </div>
+
+    <div style="text-align: center; padding: 30px 0; color: #7f8c8d;">
+      <p style="font-size: 18px; margin-bottom: 10px;">🎉 配置完成后，就可以开始使用啦！</p>
+      <p>选中网页文本 → 右键 → "保存到 flomo" ✨</p>
+    </div>
+  </div>
+</body>
+</html>

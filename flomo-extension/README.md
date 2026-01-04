@@ -42,11 +42,16 @@
 
 ### 2. 配置 API Token
 
+**📖 不知道如何获取？打开：`如何获取API-Token.html`**（超详细图文教程！）
+
+**简要步骤：**
+
 1. 打开 [flomo 网页版](https://flomoapp.com/mine)
 2. 点击右上角头像 → **设置** → **API**
-3. 复制 webhook 地址中的 token 部分
-   - 例如：`https://flomoapp.com/iwh/xxxxxxxx`
-   - 只需复制 `xxxxxxxx` 这部分
+3. 找到 **Webhook 地址**（一个网址）
+   - 完整地址像这样：`https://flomoapp.com/iwh/MjAyNC0xMi0zMVQxNTozMDowMCswODowMC0xMjM0NTY`
+   - **只需复制最后那一长串字符**：`MjAyNC0xMi0zMVQxNTozMDowMCswODowMC0xMjM0NTY`
+   - 这就是你的 **API Token**！
 4. 在扩展中点击"设置"，粘贴 API Token
 5. 点击"测试连接"确认配置正确
 
