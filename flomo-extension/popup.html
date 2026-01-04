@@ -201,6 +201,16 @@
     .hidden {
       display: none;
     }
+
+    kbd {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 2px 5px;
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
@@ -222,9 +232,20 @@
     </div>
   </div>
 
+  <!-- 快速保存选中文本 -->
+  <div class="quick-memo">
+    <p class="action-title">💡 快速保存</p>
+    <button id="saveSelection" class="btn-primary">保存当前选中的文本</button>
+    <p style="font-size: 11px; color: #7f8c8d; margin-top: 8px; text-align: center;">
+      先在网页中选中文本，然后点击此按钮
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
   <!-- 快速记录 -->
   <div class="quick-memo">
-    <p class="action-title">快速记录</p>
+    <p class="action-title">✍️ 快速记录</p>
     <textarea id="quickMemo" placeholder="在这里快速记录想法..."></textarea>
     <button id="saveMemo" class="btn-primary">保存到 flomo</button>
   </div>
@@ -240,10 +261,11 @@
 
   <!-- 使用提示 -->
   <div class="tips">
-    <div class="tips-title">💡 使用提示</div>
-    <p>1. 选中网页文本后右键选择「保存到 flomo」<br>
-    2. 扩展会自动推荐相关标签<br>
-    3. 在设置中配置你的 API Token</p>
+    <div class="tips-title">💡 使用方式</div>
+    <p><strong>方式1：</strong> 右键菜单 - 选中文本 → 右键 → 保存到 flomo<br>
+    <strong>方式2：</strong> 快捷键 - 选中文本 → <kbd>Ctrl+Shift+F</kbd> (Mac: <kbd>⌘+Shift+F</kbd>)<br>
+    <strong>方式3：</strong> 扩展按钮 - 选中文本 → 点击上方蓝色按钮<br><br>
+    ⭐ 适用于微信读书等自定义右键菜单的网站！</p>
   </div>
 
   <!-- 快捷操作 -->

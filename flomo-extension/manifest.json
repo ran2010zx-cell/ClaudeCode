@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Flomo 智能助手",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "快速保存网页内容到 flomo，并智能推荐标签",
   "permissions": [
     "storage",
     "contextMenus",
     "activeTab",
-    "notifications"
+    "notifications",
+    "scripting"
   ],
   "host_permissions": [
     "https://flomoapp.com/*",
@@ -24,6 +25,22 @@
       "128": "icons/icon128.png"
     }
   },
+  "commands": {
+    "save-to-flomo": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
+      },
+      "description": "保存选中的文本到 flomo"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
   "options_page": "options.html",
   "icons": {
     "16": "icons/icon16.png",

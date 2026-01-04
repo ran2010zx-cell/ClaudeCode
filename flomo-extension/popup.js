@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadFrequentTags();
 
   // 绑定事件
+  document.getElementById('saveSelection').addEventListener('click', saveSelectedText);
   document.getElementById('saveMemo').addEventListener('click', saveQuickMemo);
   document.getElementById('openSettings').addEventListener('click', openSettings);
   document.getElementById('openFlomo').addEventListener('click', openFlomo);
@@ -69,6 +70,69 @@ async function loadFrequentTags() {
 
   } catch (error) {
     console.error('加载常用标签失败:', error);
+  }
+}
+
+// 保存选中的文本
+async function saveSelectedText() {
+  try {
+    // 获取设置
+    const settings = await chrome.storage.sync.get(['apiToken']);
+
+    if (!settings.apiToken) {
+      alert('请先在设置中配置 API Token');
+      openSettings();
+      return;
+    }
+
+    // 显示保存中状态
+    const saveButton = document.getElementById('saveSelection');
+    const originalText = saveButton.textContent;
+    saveButton.textContent = '⏳ 保存中...';
+    saveButton.disabled = true;
+
+    // 发送到后台脚本保存
+    const response = await new Promise((resolve) => {
+      chrome.runtime.sendMessage({
+        action: 'saveSelectedText'
+      }, resolve);
+    });
+
+    if (response && response.success) {
+      // 保存成功
+      saveButton.textContent = '✓ 已保存';
+
+      // 2秒后恢复按钮
+      setTimeout(() => {
+        saveButton.textContent = originalText;
+        saveButton.disabled = false;
+      }, 2000);
+
+      // 重新加载常用标签
+      await loadFrequentTags();
+
+    } else {
+      saveButton.textContent = '✗ 保存失败';
+      setTimeout(() => {
+        saveButton.textContent = originalText;
+        saveButton.disabled = false;
+      }, 2000);
+
+      const errorMsg = response && response.error ? response.error : '未知错误';
+      if (errorMsg === '未选中任何文本') {
+        alert('请先在网页中选中要保存的文本！');
+      } else {
+        alert('保存失败: ' + errorMsg);
+      }
+    }
+
+  } catch (error) {
+    console.error('保存选中文本失败:', error);
+    alert('保存失败: ' + error.message);
+
+    const saveButton = document.getElementById('saveSelection');
+    saveButton.textContent = '保存当前选中的文本';
+    saveButton.disabled = false;
   }
 }
 

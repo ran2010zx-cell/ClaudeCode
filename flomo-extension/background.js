@@ -10,56 +10,92 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// 通用的保存选中文本到 flomo 的函数
+async function saveSelectionToFlomo(selectedText, pageUrl, pageTitle) {
+  try {
+    if (!selectedText) {
+      showNotification('未选中任何文本', 'error');
+      return { success: false, error: '未选中任何文本' };
+    }
+
+    // 显示加载中的通知
+    showNotification('正在保存到 flomo...', 'loading');
+
+    // 获取用户设置
+    const settings = await chrome.storage.sync.get(['apiToken', 'autoTag', 'includeSource']);
+
+    if (!settings.apiToken) {
+      showNotification('请先配置 flomo API Token', 'error');
+      chrome.runtime.openOptionsPage();
+      return { success: false, error: '未配置 API Token' };
+    }
+
+    // 获取智能标签推荐
+    let tags = [];
+    if (settings.autoTag !== false) {
+      tags = await suggestTags(selectedText, settings.apiToken);
+    }
+
+    // 构建 memo 内容
+    let content = selectedText;
+
+    // 添加来源（如果启用）
+    if (settings.includeSource !== false) {
+      content += `\n\n---\n来源: [${pageTitle}](${pageUrl})`;
+    }
+
+    // 添加标签
+    if (tags.length > 0) {
+      content += '\n\n' + tags.map(tag => `#${tag}`).join(' ');
+    }
+
+    // 保存到 flomo
+    const result = await saveToFlomo(content, settings.apiToken);
+
+    if (result.success) {
+      showNotification('✓ 已保存到 flomo' + (tags.length > 0 ? ` (标签: ${tags.join(', ')})` : ''), 'success');
+      return { success: true, tags };
+    } else {
+      showNotification('保存失败: ' + result.error, 'error');
+      return result;
+    }
+
+  } catch (error) {
+    console.error('保存到 flomo 失败:', error);
+    showNotification('保存失败: ' + error.message, 'error');
+    return { success: false, error: error.message };
+  }
+}
+
 // 处理右键菜单点击
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'saveToFlomo') {
-    const selectedText = info.selectionText;
-    const pageUrl = tab.url;
-    const pageTitle = tab.title;
+    await saveSelectionToFlomo(info.selectionText, tab.url, tab.title);
+  }
+});
 
+// 监听快捷键命令
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command === 'save-to-flomo') {
     try {
-      // 显示加载中的通知
-      showNotification('正在保存到 flomo...', 'loading');
+      // 获取当前活动标签页
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-      // 获取用户设置
-      const settings = await chrome.storage.sync.get(['apiToken', 'autoTag', 'includeSource']);
-
-      if (!settings.apiToken) {
-        showNotification('请先配置 flomo API Token', 'error');
-        chrome.runtime.openOptionsPage();
+      if (!tab) {
+        showNotification('无法获取当前页面', 'error');
         return;
       }
 
-      // 获取智能标签推荐
-      let tags = [];
-      if (settings.autoTag !== false) {
-        tags = await suggestTags(selectedText, settings.apiToken);
-      }
+      // 从 content script 获取选中的文本
+      const response = await chrome.tabs.sendMessage(tab.id, { action: 'getSelection' });
 
-      // 构建 memo 内容
-      let content = selectedText;
-
-      // 添加来源（如果启用）
-      if (settings.includeSource !== false) {
-        content += `\n\n---\n来源: [${pageTitle}](${pageUrl})`;
-      }
-
-      // 添加标签
-      if (tags.length > 0) {
-        content += '\n\n' + tags.map(tag => `#${tag}`).join(' ');
-      }
-
-      // 保存到 flomo
-      const result = await saveToFlomo(content, settings.apiToken);
-
-      if (result.success) {
-        showNotification('✓ 已保存到 flomo' + (tags.length > 0 ? ` (标签: ${tags.join(', ')})` : ''), 'success');
+      if (response && response.selectedText) {
+        await saveSelectionToFlomo(response.selectedText, response.pageUrl, response.pageTitle);
       } else {
-        showNotification('保存失败: ' + result.error, 'error');
+        showNotification('未选中任何文本', 'error');
       }
-
     } catch (error) {
-      console.error('保存到 flomo 失败:', error);
+      console.error('快捷键保存失败:', error);
       showNotification('保存失败: ' + error.message, 'error');
     }
   }
@@ -95,6 +131,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.action === 'saveQuickMemo') {
     saveToFlomo(request.content, request.apiToken)
+      .then(result => sendResponse(result))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
+
+  if (request.action === 'saveSelectedText') {
+    // 保存当前选中的文本
+    chrome.tabs.query({ active: true, currentWindow: true })
+      .then(([tab]) => {
+        return chrome.tabs.sendMessage(tab.id, { action: 'getSelection' });
+      })
+      .then(response => {
+        if (response && response.selectedText) {
+          return saveSelectionToFlomo(response.selectedText, response.pageUrl, response.pageTitle);
+        } else {
+          return { success: false, error: '未选中任何文本' };
+        }
+      })
       .then(result => sendResponse(result))
       .catch(error => sendResponse({ success: false, error: error.message }));
     return true;
