@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一键生成图标 - Flomo 扩展</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+    .subtitle {
+      color: #7f8c8d;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    .step {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 4px solid #3498db;
+    }
+    .step-number {
+      display: inline-block;
+      background: #3498db;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .step-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .step-content {
+      color: #555;
+      line-height: 1.6;
+      margin-left: 40px;
+    }
+    .big-button {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin: 20px 0;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+    }
+    .big-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+    }
+    .big-button:active {
+      transform: translateY(0);
+    }
+    .preview {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+    .preview-item {
+      text-align: center;
+    }
+    .preview-item canvas {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .preview-label {
+      font-size: 12px;
+      color: #666;
+      font-weight: bold;
+    }
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+      border: 1px solid #c3e6cb;
+    }
+    .success-message.show {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .emoji {
+      font-size: 48px;
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 一键生成图标</h1>
+    <p class="subtitle">为 Flomo 智能助手生成 Chrome 扩展图标</p>
+
+    <div class="preview">
+      <div class="preview-item">
+        <canvas id="canvas16" width="16" height="16"></canvas>
+        <div class="preview-label">16×16</div>
+      </div>
+      <div class="preview-item">
+        <canvas id="canvas48" width="48" height="48"></canvas>
+        <div class="preview-label">48×48</div>
+      </div>
+      <div class="preview-item">
+        <canvas id="canvas128" width="128" height="128"></canvas>
+        <div class="preview-label">128×128</div>
+      </div>
+    </div>
+
+    <button id="downloadBtn" class="big-button">
+      📥 点击下载全部图标
+    </button>
+
+    <div id="successMsg" class="success-message">
+      <strong>✓ 下载成功！</strong><br>
+      请将下载的三个 PNG 文件放到 <code>flomo-extension/icons/</code> 目录下
+    </div>
+
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">1</span>
+        下载图标文件
+      </div>
+      <div class="step-content">
+        点击上面的蓝色按钮，会自动下载三个 PNG 文件<br>
+        （icon16.png, icon48.png, icon128.png）
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">2</span>
+        放置文件
+      </div>
+      <div class="step-content">
+        将下载的文件放到 <strong>flomo-extension/icons/</strong> 目录下
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-title">
+        <span class="step-number">3</span>
+        完成！
+      </div>
+      <div class="step-content">
+        现在可以在 Chrome 中加载扩展了 🎉
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 绘制图标
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      const scale = size / 128; // 基于 128px 缩放
+
+      // 清空画布
+      ctx.clearRect(0, 0, size, size);
+
+      // 绘制圆角矩形背景
+      const radius = size * 0.18;
+      ctx.fillStyle = '#3498db';
+      ctx.beginPath();
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.arcTo(size, 0, size, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.arcTo(size, size, 0, size, radius);
+      ctx.lineTo(radius, size);
+      ctx.arcTo(0, size, 0, 0, radius);
+      ctx.lineTo(0, radius);
+      ctx.arcTo(0, 0, size, 0, radius);
+      ctx.closePath();
+      ctx.fill();
+
+      // 绘制笔记图标（简化版）
+      const iconSize = size * 0.5;
+      const iconX = (size - iconSize) / 2;
+      const iconY = (size - iconSize) / 2;
+
+      // 绘制笔记本
+      ctx.fillStyle = 'white';
+      ctx.fillRect(iconX, iconY, iconSize, iconSize * 0.85);
+
+      // 绘制横线
+      ctx.strokeStyle = '#3498db';
+      ctx.lineWidth = Math.max(1, size / 32);
+      const lineY1 = iconY + iconSize * 0.3;
+      const lineY2 = iconY + iconSize * 0.5;
+      const lineY3 = iconY + iconSize * 0.7;
+
+      ctx.beginPath();
+      ctx.moveTo(iconX + iconSize * 0.15, lineY1);
+      ctx.lineTo(iconX + iconSize * 0.85, lineY1);
+      ctx.moveTo(iconX + iconSize * 0.15, lineY2);
+      ctx.lineTo(iconX + iconSize * 0.85, lineY2);
+      ctx.moveTo(iconX + iconSize * 0.15, lineY3);
+      ctx.lineTo(iconX + iconSize * 0.85, lineY3);
+      ctx.stroke();
+    }
+
+    // 生成所有图标
+    function generateIcons() {
+      drawIcon(document.getElementById('canvas16'), 16);
+      drawIcon(document.getElementById('canvas48'), 48);
+      drawIcon(document.getElementById('canvas128'), 128);
+    }
+
+    // 下载单个图标
+    function downloadIcon(canvas, filename) {
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+          setTimeout(resolve, 100);
+        }, 'image/png');
+      });
+    }
+
+    // 下载所有图标
+    async function downloadAllIcons() {
+      const btn = document.getElementById('downloadBtn');
+      const originalText = btn.textContent;
+
+      btn.textContent = '⏳ 正在下载...';
+      btn.disabled = true;
+
+      await downloadIcon(document.getElementById('canvas16'), 'icon16.png');
+      await downloadIcon(document.getElementById('canvas48'), 'icon48.png');
+      await downloadIcon(document.getElementById('canvas128'), 'icon128.png');
+
+      btn.textContent = '✓ 下载完成！';
+      document.getElementById('successMsg').classList.add('show');
+
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 2000);
+    }
+
+    // 页面加载时生成图标
+    window.addEventListener('load', () => {
+      generateIcons();
+      document.getElementById('downloadBtn').addEventListener('click', downloadAllIcons);
+    });
+  </script>
+</body>
+</html>
