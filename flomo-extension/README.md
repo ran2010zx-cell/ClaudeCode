@@ -20,12 +20,20 @@
 
 #### 方式二：手动加载扩展
 
-1. **生成图标文件**
-   - 在浏览器中打开 `generate-icons.html` 文件
-   - 点击"下载所有图标"按钮
-   - 将下载的 `icon16.png`, `icon48.png`, `icon128.png` 文件放到 `icons/` 目录
+1. **下载代码**
+   ```bash
+   git clone https://github.com/ran2010zx-cell/ClaudeCode.git
+   cd ClaudeCode
+   git checkout claude/flomo-chrome-extension-RBwXP
+   ```
+   或者直接从 GitHub 下载 ZIP 文件
 
-2. **加载扩展**
+2. **生成图标文件**（超级简单！）
+   - 双击打开 `flomo-extension/一键生成图标.html`
+   - 点击蓝色大按钮"📥 点击下载全部图标"
+   - 将下载的三个 PNG 文件放到 `icons/` 目录
+
+3. **加载扩展**
    - 打开 Chrome 浏览器
    - 访问 `chrome://extensions/`
    - 开启右上角的"开发者模式"
