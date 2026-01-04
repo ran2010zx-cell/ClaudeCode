@@ -96,7 +96,14 @@ chrome.commands.onCommand.addListener(async (command) => {
       }
     } catch (error) {
       console.error('快捷键保存失败:', error);
-      showNotification('保存失败: ' + error.message, 'error');
+
+      // 检查是否是连接错误
+      if (error.message.includes('Could not establish connection') ||
+          error.message.includes('Receiving end does not exist')) {
+        showNotification('请刷新页面后重试（按 F5）', 'error');
+      } else {
+        showNotification('保存失败: ' + error.message, 'error');
+      }
     }
   }
 });
@@ -150,7 +157,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
       })
       .then(result => sendResponse(result))
-      .catch(error => sendResponse({ success: false, error: error.message }));
+      .catch(error => {
+        // 检查是否是连接错误
+        if (error.message.includes('Could not establish connection') ||
+            error.message.includes('Receiving end does not exist')) {
+          sendResponse({ success: false, error: '请刷新页面后重试（按 F5）' });
+        } else {
+          sendResponse({ success: false, error: error.message });
+        }
+      });
     return true;
   }
 });
