@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flomo 智能助手</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 350px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      padding: 20px;
+      color: #333;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #7f8c8d;
+    }
+
+    .status-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .status-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .status-value {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-value.connected {
+      color: #27ae60;
+    }
+
+    .status-value.disconnected {
+      color: #e74c3c;
+    }
+
+    .quick-actions {
+      margin-bottom: 15px;
+    }
+
+    .action-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .quick-memo {
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 10px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+    }
+
+    .btn-secondary {
+      background: #ecf0f1;
+      color: #555;
+    }
+
+    .btn-secondary:hover {
+      background: #ddd;
+    }
+
+    .btn-link {
+      background: none;
+      color: #3498db;
+      text-decoration: none;
+      padding: 5px;
+    }
+
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+
+    .tips {
+      background: #e8f4f8;
+      border-left: 3px solid #3498db;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #2c3e50;
+    }
+
+    .tips-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #ecf0f1;
+      margin: 15px 0;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #95a5a6;
+      margin-top: 15px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      background: #e8f4f8;
+      color: #3498db;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      background: #3498db;
+      color: white;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">📝</div>
+    <h1>Flomo 智能助手</h1>
+    <p class="subtitle">快速保存到 flomo</p>
+  </div>
+
+  <!-- 状态卡片 -->
+  <div class="status-card">
+    <div class="status-item">
+      <span class="status-label">连接状态</span>
+      <span id="connectionStatus" class="status-value disconnected">未配置</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">自动标签</span>
+      <span id="autoTagStatus" class="status-value">已启用</span>
+    </div>
+  </div>
+
+  <!-- 快速记录 -->
+  <div class="quick-memo">
+    <p class="action-title">快速记录</p>
+    <textarea id="quickMemo" placeholder="在这里快速记录想法..."></textarea>
+    <button id="saveMemo" class="btn-primary">保存到 flomo</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 常用标签 -->
+  <div id="frequentTagsSection" class="hidden">
+    <p class="action-title">常用标签</p>
+    <div id="frequentTags" class="tag-list"></div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- 使用提示 -->
+  <div class="tips">
+    <div class="tips-title">💡 使用提示</div>
+    <p>1. 选中网页文本后右键选择「保存到 flomo」<br>
+    2. 扩展会自动推荐相关标签<br>
+    3. 在设置中配置你的 API Token</p>
+  </div>
+
+  <!-- 快捷操作 -->
+  <div class="quick-actions">
+    <button id="openSettings" class="btn-secondary">打开设置</button>
+    <button id="openFlomo" class="btn-link">打开 flomo 网页版</button>
+  </div>
+
+  <div class="footer">
+    Made with ❤️ for flomo users
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
