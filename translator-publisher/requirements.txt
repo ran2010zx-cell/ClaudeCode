@@ -1,28 +1,10 @@
-# Notion → Substack + Twitter 自动发布工具依赖
+# 文章翻译发布工具 - 依赖
 
-# 配置管理
-pydantic>=2.5.0
-pydantic-settings>=2.1.0
-python-dotenv>=1.0.0
+# Web 界面
+streamlit>=1.29.0
 
 # HTTP 请求
 requests>=2.31.0
 
-# 日志
-loguru>=0.7.2
-
-# 翻译 API
-openai>=1.0.0
-anthropic>=0.18.0
-
-# Twitter API
+# Twitter API (可选)
 tweepy>=4.14.0
-
-# Markdown 处理
-markdown>=3.5.0
-
-# Substack (Selenium 方式)
-selenium>=4.15.0
-
-# 数据处理
-python-dateutil>=2.8.0
